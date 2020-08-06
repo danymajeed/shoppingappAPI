@@ -18,9 +18,9 @@ def makeQuery(t, f, v, mainQuery, operator):
     elif (t == 'equals'):
         t = 'iexact'
     elif (t == 'beginsWith'):
-        t = 'startswith'
+        t = 'istartswith'
     elif (t == 'endsWith'):
-        t = 'endswith'
+        t = 'iendswith'
     elif (t == 'greaterThanEqual'):
         t = 'gte'
     elif (t == 'lessThanEqual'):
@@ -29,6 +29,8 @@ def makeQuery(t, f, v, mainQuery, operator):
         t = 'gt'
     elif (t == 'lessThan'):
         t = 'lt'
+    elif (t == 'matches'):
+        t = 'regex'
     if v != "":
         kwargs = {str('%s__%s' % (f, t)): str('%s' % v)}
         if operator == "and":
@@ -47,6 +49,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'], permission_classes=[permissions.AllowAny])
     def search(self, request, *args, **kwargs):
         mainQuery = Q()
+
         for obj in request.data["data"]:
             for key in obj:
                 # or condition check
